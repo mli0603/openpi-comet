@@ -34,12 +34,18 @@
 > [!TIP]
 > OpenPi Comet is the submission of Team Comet for the [2025 BEHAVIOR Challenge](https://behavior.stanford.edu/index.html). This repository provides a unified framework for pre-training, post-training, data generation and evaluation of π0.5 (Pi05) models on BEHAVIOR-1K.
 
-Our [[First Submission]](https://behavior.stanford.edu/challenge/leaderboard.html#privileged-information-track) achieved a Q-score of 0.2514, securing 2nd place overall and finishing just behind the winning team by a narrow margin—highlighting both the strong competitiveness of our approach and the effectiveness of our end-to-end VLA training strategy. This codebase contains:
+Our [[submission]](https://behavior.stanford.edu/challenge/leaderboard.html#privileged-information-track) achieved a Q-score of 0.2514, securing 2nd place overall and finishing just behind the winning team by a narrow margin—highlighting both the strong competitiveness of our approach and the effectiveness of our end-to-end VLA training strategy. 
 
+<p align="center">
+  <img src="docs/leaderboard.png" width="80%">
+</p>
+
+
+This codebase contains:
 1. Distributed OpenPi training infrastructure
-2. Support of hierarchical instructions (global, subtask, skill) and multimodal observations (RGB, depth, point cloud, segmentation, bounding boxes, human pointing) training setup
-3. High-throughput parallel simulation rollouts in BEHAVIOR-1K
-4. Post-training via Rejection Sampling Fine-Tuning (RFT) with automated dataset construction
+2. Various pre-training setup, including hierarchical instructions (global, subtask, skill) and multimodal observations (RGB, depth, point cloud, segmentation, bounding boxes, human pointing)
+3. Post-training via Rejection Sampling Fine-Tuning (RFT) with automated dataset construction
+4. Data generation scripts such as teleoperation and simulation rollouts using existing policy
 5. Model zoo of pretrained VLA checkpoints trained on 1M+ robot interactions
 
 Please check our [[Report]](./docs/report.pdf) for more details.
@@ -203,7 +209,7 @@ XLA_PYTHON_CLIENT_MEM_FRACTION=0.9 uv run scripts/train_val.py pi05_b1k-turning_
     or the checkpoint from our model zoo" # also be configurable in the config
 ```
 
-### Pretrain OpenPi
+### Pre-train OpenPi
 
 To support distributed training, we update `src/openpi/training/data_loader.py` for data sharding, and the `src/openpi/training/checkpoints_dist.py` and `scripts/train_dist.py` for distributed checkpointing management and training. To launch the pretrain, run the following command:
 
@@ -223,7 +229,7 @@ python scripts/compute_norm_stats.py --config-name ${config_name}
 python scripts/train_dist.py ${config_name} --exp_name=${exp_name} --overwrite
 ```
 
-### Rejection Sampling fine-tuning (RFT)
+### Post-train OpenPi using Rejection Sampling fine-tuning (RFT)
 
 To perform RFT, you need to first deploy the finetuned checkpoint, and then rollout the episodes in the BEHAVIOR-1K Simulator. We also observe that the `pose perturbator` helps improve the robustness of the RFT Algorithm. 
 
