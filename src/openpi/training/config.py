@@ -771,7 +771,7 @@ _CONFIGS = [
     ),
     # 1. pretrain configs
     TrainConfig(
-        name="pi05_b1k-pt7_cs32_bs64_lr2.5e-5_step50k_gpu80",
+        name="pi05_b1k-pt7_cs32_bs64_lr2.5e-5_step50k",
         exp_name="openpi",
         project_name="B1K",
         model=pi0_config.Pi0Config(pi05=True, action_horizon=32),
@@ -806,10 +806,10 @@ _CONFIGS = [
         ema_decay=None,
         checkpoint_base_dir=".",
         num_workers=8,
-        batch_size=80 * 64,
+        batch_size=8 * 32,
     ),
     TrainConfig(
-        name="pi05_b1k-pt10_cs32_bs64_lr2.5e-5_step50k_gpu80",
+        name="pi05_b1k-pt10_cs32_bs64_lr2.5e-5_step50k",
         exp_name="openpi",
         project_name="B1K",
         model=pi0_config.Pi0Config(pi05=True, action_horizon=32),
@@ -846,10 +846,10 @@ _CONFIGS = [
         ema_decay=None,
         checkpoint_base_dir=".",
         num_workers=8,
-        batch_size=80 * 64,
+        batch_size=8 * 32,
     ),
     TrainConfig(
-        name="pi05_b1k-pt12_cs32_bs64_lr2.5e-5_step50k_gpu80",
+        name="pi05_b1k-pt12_cs32_bs64_lr2.5e-5_step50k",
         exp_name="openpi",
         project_name="B1K",
         model=pi0_config.Pi0Config(pi05=True, action_horizon=32),
@@ -890,10 +890,10 @@ _CONFIGS = [
         assets_base_dir="./outputs/assets",
         checkpoint_base_dir=".",
         num_workers=8,
-        batch_size=80 * 64,
+        batch_size=8 * 32,
     ),
     TrainConfig(
-        name="pi05_b1k-pt50_cs32_bs64_lr2.5e-5_step50k_gpu400",
+        name="pi05_b1k-pt50_cs32_bs64_lr2.5e-5_step50k",
         exp_name="openpi",
         project_name="B1K",
         model=pi0_config.Pi0Config(pi05=True, action_horizon=32),
@@ -972,7 +972,7 @@ _CONFIGS = [
         assets_base_dir="./outputs/assets",
         checkpoint_base_dir=".",
         num_workers=8,
-        batch_size=400 * 64,
+        batch_size=8 * 32,
     ),
     # 2. SFT Configs
     TrainConfig(
@@ -1000,7 +1000,7 @@ _CONFIGS = [
         ema_decay=None,
         checkpoint_base_dir=".",
         num_workers=8,
-        batch_size=8 * 64,
+        batch_size=8 * 32,
     ),
     # ... add more SFT configs here ...
     # 3. RFT Configs
@@ -1029,10 +1029,10 @@ _CONFIGS = [
         ema_decay=None,
         checkpoint_base_dir=".",
         num_workers=8,
-        batch_size=8 * 64,
+        batch_size=8 * 32,
     ),
     TrainConfig(
-        name="pi05_b1k-pt50_cs32_bs64_lr2.5e-5_step50k_gpu400_rft",
+        name="pi05_b1k-pt50_cs32_bs64_lr2.5e-5_step50k_rft",
         exp_name="openpi",
         project_name="B1K",
         model=pi0_config.Pi0Config(pi05=True, action_horizon=32),
@@ -1109,7 +1109,7 @@ _CONFIGS = [
         assets_base_dir="./outputs/assets",
         checkpoint_base_dir=".",
         num_workers=8,
-        batch_size=400 * 64,
+        batch_size=8 * 32,
     ),
 ]
 
