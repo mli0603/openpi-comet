@@ -175,11 +175,9 @@ def trim_and_copy_videos(
         "left_wrist.mp4": ("videos", task_id_str, "observation.images.rgb.left_wrist", f"episode_{episode_id:08d}.mp4"),
         "right_wrist.mp4": ("videos", task_id_str, "observation.images.rgb.right_wrist", f"episode_{episode_id:08d}.mp4"),
     }
-    # Compute exact frame slice [start_idx, end_idx], inclusive, then reset PTS.
-    start_idx = trim_frames
-    end_idx = trim_frames + max(0, int(num_frames_out) - 1)
-    # Use select with inclusive between on frame index; then reset timestamps to start at 0.
-    vf = f"select='between(n\\,{start_idx}\\,{end_idx})',setpts=N/FRAME_RATE/TB"
+
+    # trim frames from the start
+    vf = f"select='gte(n,{TRIM_FRAMES})'"
     for src_name, path_parts in mapping.items():
         src = os.path.join(run_dir, src_name)
         if not os.path.exists(src):
@@ -192,13 +190,13 @@ def trim_and_copy_videos(
         # Local destination: write to a tmp then move
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         with tempfile.TemporaryDirectory() as td:
-            tmp_out = os.path.join(td, "trimmed.mp4")
-            ok = _run_ffmpeg_trim(src, tmp_out, vf)
-            if not ok:
-                shutil.copyfile(src, dst)
+            tmp_out_ffmpeg = os.path.join(td, "trimmed_ffmpeg.mp4")
+            ok_ffmpeg = _run_ffmpeg_trim(src, tmp_out_ffmpeg, vf)
+            if ok_ffmpeg:
+                shutil.copyfile(tmp_out_ffmpeg, dst)
             else:
-                shutil.copyfile(tmp_out, dst)
-
+                print(f"CRITICAL: ffmpeg trim also failed for {src}.", flush=True)
+                raise RuntimeError(f"ffmpeg trim also failed for {src}.")
 
 def _run_ffmpeg_trim(src: str, dst: str, vf_filter: str) -> bool:
     """
@@ -216,16 +214,6 @@ def _run_ffmpeg_trim(src: str, dst: str, vf_filter: str) -> bool:
             "-vsync",
             "vfr",
             "-an",
-            "-c:v",
-            "libx264",
-            "-preset",
-            "veryfast",
-            "-crf",
-            "23",
-            "-pix_fmt",
-            "yuv420p",
-            "-movflags",
-            "+faststart",
             dst,
         ]
         # Using check=True to raise on failure
