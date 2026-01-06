@@ -818,7 +818,7 @@ _CONFIGS = [
                 ),
             ),
             LeRobotB1KDataConfig(
-                repo_id="rft-debug/comet-val-v2",
+                repo_id="delinqu/comet-1.5k",
                 base_config=DataConfig(
                     prompt_from_task=True,
                     behavior_dataset_root="../DATASETS/behavior/comet-1.5k",
